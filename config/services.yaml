@@ -1,0 +1,24 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Becklyn\Eventor\:
+    resource: "../src/*"
+
+  CloudEvents\Serializers\Normalizers\V1\DenormalizerInterface:
+    class: CloudEvents\Serializers\Normalizers\V1\Denormalizer
+
+  CloudEvents\Serializers\DeserializerInterface:
+    class: CloudEvents\Serializers\JsonDeserializer
+
+  Becklyn\Eventor\Infrastructure\Dapr\Publisher\DaprPublisher:
+    class: Becklyn\Eventor\Infrastructure\Dapr\Publisher\DaprPublisher
+    arguments:
+      $host: "%env(resolve:DAPR_HOST)%"
+      $pubsub: "%env(resolve:DAPR_PUBSUB)%"
+
+  Becklyn\Eventor\Infrastructure\Dapr\Subscriber\DaprSubscriptionRegistry:
+    class: Becklyn\Eventor\Infrastructure\Dapr\Subscriber\DaprSubscriptionRegistry
+    arguments:
+      $pubsub: "%env(resolve:DAPR_PUBSUB)%"
