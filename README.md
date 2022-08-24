@@ -22,11 +22,11 @@ composer require becklyn/eventor-symfony
 
 Being a minimalistic libary, *eventor* only provides you with the basiscs. The rest is up to your specific need.
 
-### Required env variables
+### Env variables
 
 ```env
-DAPR_HOST=http://localhost:3500
-DAPR_PUBSUB=redis-pubsub
+DAPR_HOST=http://localhost:3500 # Default: (null)
+DAPR_PUBSUB=pubsubname # Default: (null)
 ```
 
 ### Register the Publisher
@@ -99,8 +99,6 @@ class DaprSubscriptionController extends AbstractController
 ```php
 class SubscribeExample
 {
-    private readonly On $on;
-
     public function __construct(
         private readonly Subscriber $subscriber,
     ) {

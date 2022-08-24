@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DaprSubscribeController extends AbstractController
 {
     public function __construct(
-        private DaprSubscriptionRegistry $subscriptionRegistry,
+        private readonly DaprSubscriptionRegistry $subscriptionRegistry,
     ) {
     }
 

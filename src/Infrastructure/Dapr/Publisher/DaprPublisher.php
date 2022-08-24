@@ -17,13 +17,21 @@ class DaprPublisher implements Publisher
     ) {
     }
 
+    /**
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
+     * @throws \Becklyn\Eventor\Application\Publisher\PublishException
+     */
     public function publish(string $topic, mixed $data): void
     {
-        $response = $this->httpClient->request(
-            Request::METHOD_POST,
-            "{$this->host}/v1.0/publish/{$this->pubsub}/{$topic}",
-            ["json" => $data],
-        );
+        try {
+            $response = $this->httpClient->request(
+                Request::METHOD_POST,
+                "{$this->host}/v1.0/publish/{$this->pubsub}/{$topic}",
+                ["json" => $data],
+            );
+        } catch (\Throwable $e) {
+            throw new PublishException("delivery failed", previous:  $e);
+        }
 
         switch ($response->getStatusCode()) {
             case Response::HTTP_FORBIDDEN:

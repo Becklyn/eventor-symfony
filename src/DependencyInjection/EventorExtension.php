@@ -20,8 +20,5 @@ class EventorExtension extends Extension
         );
 
         $loader->load('services.yaml');
-
-        // dump("EventorExtension::load()");
-        // exit;
     }
 }

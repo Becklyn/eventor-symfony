@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection PhpUnused */
 
 namespace Becklyn\Eventor\Application\Handler;
 
@@ -12,9 +12,9 @@ class On
     private Closure $handler;
 
     public function __construct(
-        callable $handler,
-        private Subscriber $subscriber,
-        string $topic,
+        callable                    $handler,
+        private readonly Subscriber $subscriber,
+        string                      $topic,
     ) {
         $this->handler = function (CloudEventInterface $event) use ($handler) {
             $handlerFn = new ReflectionFunction($handler);
@@ -24,8 +24,8 @@ class On
                 return $handler($event->getData());
             }
 
-            $serializedData = json_encode($event->getData());
-            $data = json_decode($serializedData, false);
+            $serializedData = \json_encode($event->getData(), JSON_THROW_ON_ERROR);
+            $data = \json_decode($serializedData, false, 512, JSON_THROW_ON_ERROR);
 
             $handler($this->cast($data, $type));
         };
@@ -38,13 +38,14 @@ class On
         $this->subscriber->unsubscribe($this->handler);
     }
 
+    /** @noinspection UnserializeExploitsInspection */
     private function cast(mixed $instance, string $type): mixed
     {
-        return unserialize(sprintf(
+        return \unserialize(\sprintf(
             'O:%d:"%s"%s',
             \strlen($type),
             $type,
-            strstr(strstr(serialize($instance), '"'), ':')
+            \strstr(\strstr(\serialize($instance), '"'), ':')
         ));
     }
 }

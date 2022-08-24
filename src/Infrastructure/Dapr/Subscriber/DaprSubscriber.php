@@ -11,13 +11,14 @@ class DaprSubscriber
     private Collection $handlers;
 
     public function __construct(
-        private string $pubsubname,
-        private string $topic,
-        private string $route,
+        private readonly string $pubsubname,
+        private readonly string $topic,
+        private readonly string $route,
     ) {
         $this->handlers = new Collection();
     }
 
+    /** @noinspection PhpUnused */
     public function pubsubname(): string
     {
         return $this->pubsubname;

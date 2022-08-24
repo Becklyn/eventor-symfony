@@ -2,7 +2,7 @@
 
 namespace Becklyn\Eventor\Infrastructure\Dapr\Subscriber;
 
-use Becklyn\Eventor\Application\Publisher\Subscriber;
+use Becklyn\Eventor\Application\Subscriber\Subscriber;
 use CloudEvents\Serializers\DeserializerInterface;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,8 +12,8 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class DaprSubscriptionRegistry implements Subscriber
 {
-    /** @var DaprSubscriber[]|Collection $subscribers  */
-    private Collection $subscribers;
+    /** @var Collection|DaprSubscriber[] $subscribers  */
+    private Collection|array $subscribers;
 
     public function __construct(
         private readonly string $pubsub,
@@ -62,7 +62,9 @@ class DaprSubscriptionRegistry implements Subscriber
         return new JsonResponse($response, Response::HTTP_OK, json: true);
     }
 
-    public function handleSubscription(Request $request): Response
+
+    /** @noinspection PhpUnused */
+    public function handleTopic(Request $request): Response
     {
         /** @var ?DaprSubscriber $subscriberForTopic **/
         $subscriberForTopic = $this->subscribers->filter(
@@ -75,8 +77,7 @@ class DaprSubscriptionRegistry implements Subscriber
 
         try {
             $event = $this->eventDeserializer->deserializeStructured($request->getContent());
-        } catch (\Throwable $e) {
-            error_log($e);
+        } catch (\Throwable) {
             return new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -88,12 +89,11 @@ class DaprSubscriptionRegistry implements Subscriber
             try {
                 $handler($event);
             } catch (\Throwable $e) {
-                error_log($e);
                 $errors = $errors->push($e);
             }
         }
 
-        if (!$errors->empty()) {
+        if (!$errors->isEmpty()) {
             return new Response(status: Response::HTTP_BAD_REQUEST);
         }
         return new Response(status: Response::HTTP_OK);

@@ -1,6 +1,6 @@
 <?php
 
-namespace Becklyn\Eventor\Application\Publisher;
+namespace Becklyn\Eventor\Application\Subscriber;
 
 interface Subscriber
 {
