@@ -1,8 +1,10 @@
-<?php /** @noinspection PhpUnused */
+<?php
+
+/** @noinspection PhpUnused */
 
 namespace Becklyn\Eventor\Application\Handler;
 
-use Becklyn\Eventor\Application\Publisher\Subscriber;
+use Becklyn\Eventor\Application\Subscriber\Subscriber;
 use Closure;
 use CloudEvents\V1\CloudEventInterface;
 use ReflectionFunction;
