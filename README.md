@@ -29,16 +29,6 @@ DAPR_HOST=http://localhost:3500 # Default: (null)
 DAPR_PUBSUB=pubsubname # Default: (null)
 ```
 
-### Register required routes
-
-
-```yaml
-# config/routes.yaml
-
-eventor:
-    resource: '@EventorBundle/config/routes.yaml'
-```
-
 ### Register the Publisher
 
 ```yaml
@@ -100,29 +90,24 @@ class DaprSubscriptionController extends AbstractController
 {
     public function __construct(
         private readonly DaprSubscriptionRegistry $subscriptionRegistry,
-    ) {}
+    ) {
+        new On(
+            fn (Message $msg) => echo($msg),
+            $this->$subscriber,
+            "topic",
+        );
+    }
+
+    #[Route('/dapr/subscribe', methods: [Request::METHOD_GET])]
+    public function handleSubscribe() : Response
+    {
+        return $this->subscriptionRegistry->handleSubscribe();
+    }
 
     #[Route('/dapr/pubsubname/topic', methods: [Request::METHOD_POST])]
     public function handleTopic(Request $request): Response
     {
         return $this->subscriptionRegistry->handleTopic($request);
-    }
-}
-```
-
-```php
-class SubscribeExample
-{
-    public function __construct(
-        private readonly Subscriber $subscriber,
-    ) {
-        $on = new On(
-            fn (Message $msg) => echo($msg),
-            $this->$subscriber,
-            "topic",
-        );
-
-        $on->unsubscribe();
     }
 }
 ```

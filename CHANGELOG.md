@@ -1,3 +1,7 @@
+# 1.0.5
+
+- (internal) Remove built-in DaprSubscribeController
+
 # 1.0.4
 
 - (internal) Fix code-style
