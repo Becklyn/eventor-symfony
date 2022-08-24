@@ -1,8 +1,7 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Becklyn\Eventor\Infrastructure\Dapr\Subscriber;
 
-use Becklyn\Eventor\Infrastructure\Dapr\Subscriber\DaprSubscriptionRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +15,7 @@ class DaprSubscribeController extends AbstractController
     }
 
     #[Route('/dapr/subscribe', methods: [Request::METHOD_GET])]
-    public function subscribe(): Response
+    public function subscribe() : Response
     {
         return $this->subscriptionRegistry->handleSubscribe();
     }

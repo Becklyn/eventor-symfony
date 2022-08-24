@@ -1,3 +1,8 @@
+# 1.0.4
+
+- (internal) Fix code-style
+- (internal) Add missing dependency to symfony/framework-bundle `^6.1`
+
 # 1.0.3
 
 - (bug) Fix On handler import statement

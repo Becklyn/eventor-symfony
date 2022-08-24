@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Becklyn\Eventor\DependencyInjection;
 
@@ -12,7 +12,7 @@ class EventorExtension extends Extension
     /**
      * @throws \Exception
      */
-    public function load(array $configs, ContainerBuilder $container): void
+    public function load(array $configs, ContainerBuilder $container) : void
     {
         $loader = new YamlFileLoader(
             $container,

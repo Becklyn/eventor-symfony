@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Becklyn\Eventor\Infrastructure\Dapr\Subscriber;
 
@@ -7,7 +7,7 @@ use Symfony\Component\Serializer\Annotation\Ignore;
 
 class DaprSubscriber
 {
-    /** @var callable[]|Collection $handlers */
+    /** @var callable[]|Collection */
     private Collection $handlers;
 
     public function __construct(
@@ -19,33 +19,33 @@ class DaprSubscriber
     }
 
     /** @noinspection PhpUnused */
-    public function pubsubname(): string
+    public function pubsubname() : string
     {
         return $this->pubsubname;
     }
 
-    public function topic(): string
+    public function topic() : string
     {
         return $this->topic;
     }
 
-    public function route(): string
+    public function route() : string
     {
         return $this->route;
     }
 
     #[Ignore]
-    public function getHandlers(): Collection
+    public function getHandlers() : Collection
     {
         return $this->handlers;
     }
 
-    public function bindHandler(callable $handler): void
+    public function bindHandler(callable $handler) : void
     {
         $this->handlers = $this->handlers->push($handler);
     }
 
-    public function unbindHandler(callable $handler): bool
+    public function unbindHandler(callable $handler) : bool
     {
         $preUnbindCount = $this->handlers->count();
 
@@ -55,6 +55,6 @@ class DaprSubscriber
 
         $postUnbindCount = $this->handlers->count();
 
-        return $postUnbindCount - $preUnbindCount === -1;
+        return -1 === $postUnbindCount - $preUnbindCount;
     }
 }

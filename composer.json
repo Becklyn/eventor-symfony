@@ -18,7 +18,8 @@
     "symfony/http-kernel": "6.1.*",
     "symfony/serializer": "6.1.*",
     "symfony/dependency-injection": "6.1.*",
-    "symfony/config": "6.1.*"
+    "symfony/config": "6.1.*",
+    "symfony/framework-bundle": "^6.1"
   },
   "autoload": {
     "psr-4": {
@@ -28,6 +29,14 @@
   "autoload-dev": {
     "psr-4": {
       "Becklyn\\Eventor\\Tests\\": "tests/"
+    }
+  },
+  "require-dev": {
+    "bamarni/composer-bin-plugin": "^1.8"
+  },
+  "config": {
+    "allow-plugins": {
+      "bamarni/composer-bin-plugin": true
     }
   }
 }

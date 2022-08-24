@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Becklyn\Eventor\Infrastructure\Dapr\Subscriber;
 
@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class DaprSubscriptionRegistry implements Subscriber
 {
-    /** @var Collection|DaprSubscriber[] $subscribers  */
+    /** @var Collection|DaprSubscriber[] */
     private Collection|array $subscribers;
 
     public function __construct(
@@ -23,14 +23,14 @@ class DaprSubscriptionRegistry implements Subscriber
         $this->subscribers = Collection::empty();
     }
 
-    public function subscribe(string $topic, callable $handler): void
+    public function subscribe(string $topic, callable $handler) : void
     {
-        /** @var ?DaprSubscriber $subscriberForTopic **/
+        /** @var ?DaprSubscriber $subscriberForTopic */
         $subscriberForTopic = $this->subscribers->filter(
             fn (DaprSubscriber $subscriber) => $subscriber->topic() === $topic,
         )->first();
 
-        if ($subscriberForTopic === null) {
+        if (null === $subscriberForTopic) {
             $newSubscriber = new DaprSubscriber(
                 $this->pubsub,
                 $topic,
@@ -46,7 +46,7 @@ class DaprSubscriptionRegistry implements Subscriber
         $subscriberForTopic->bindHandler($handler);
     }
 
-    public function unsubscribe(callable $handler): void
+    public function unsubscribe(callable $handler) : void
     {
         /** @var DaprSubscriber $subscriber */
         foreach ($this->subscribers->toArray() as $subscriber) {
@@ -56,7 +56,7 @@ class DaprSubscriptionRegistry implements Subscriber
         }
     }
 
-    public function handleSubscribe(): Response
+    public function handleSubscribe() : Response
     {
         $response = $this->serializer->serialize($this->subscribers, 'json');
         return new JsonResponse($response, Response::HTTP_OK, json: true);
@@ -64,14 +64,14 @@ class DaprSubscriptionRegistry implements Subscriber
 
 
     /** @noinspection PhpUnused */
-    public function handleTopic(Request $request): Response
+    public function handleTopic(Request $request) : Response
     {
-        /** @var ?DaprSubscriber $subscriberForTopic **/
+        /** @var ?DaprSubscriber $subscriberForTopic */
         $subscriberForTopic = $this->subscribers->filter(
             fn (DaprSubscriber $subscriber) => $subscriber->route() === $request->getRequestUri(),
         )->first();
 
-        if ($subscriberForTopic === null) {
+        if (null === $subscriberForTopic) {
             return new Response(status: Response::HTTP_NOT_FOUND);
         }
 
