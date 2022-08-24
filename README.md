@@ -29,9 +29,21 @@ DAPR_HOST=http://localhost:3500 # Default: (null)
 DAPR_PUBSUB=pubsubname # Default: (null)
 ```
 
+### Register required routes
+
+
+```yaml
+# config/routes.yaml
+
+eventor:
+    resource: '@EventorBundle/config/routes.yaml'
+```
+
 ### Register the Publisher
 
 ```yaml
+# config/services.yaml
+
 Becklyn\Eventor\Application\Publisher:
     class: Becklyn\Eventor\Infrastructure\Dapr\Publisher\DaprPublisher
 ```
@@ -39,6 +51,8 @@ Becklyn\Eventor\Application\Publisher:
 ### Register the Subscriber
 
 ```yaml
+# config/services.yaml
+
 Becklyn\Eventor\Application\Subscriber:
     class: Becklyn\Eventor\Infrastructure\Dapr\Subscriber\DaprSubscriptionRegistry
 ```
@@ -91,7 +105,7 @@ class DaprSubscriptionController extends AbstractController
     #[Route('/dapr/pubsubname/topic', methods: [Request::METHOD_POST])]
     public function handleTopic(Request $request): Response
     {
-        return $this->subscriptionRegistry->handleSubscriptions($request);
+        return $this->subscriptionRegistry->handleTopic($request);
     }
 }
 ```
