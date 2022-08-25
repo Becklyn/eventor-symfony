@@ -1,3 +1,8 @@
+# 1.0.6
+
+- (internal) Use the symfony serializer in publisher
+- (docs) Improved README.md
+
 # 1.0.5
 
 - (internal) Remove built-in DaprSubscribeController

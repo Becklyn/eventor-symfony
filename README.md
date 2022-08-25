@@ -4,7 +4,7 @@
 
 &rarr; *eventor* is [clerk](https://github.com/Becklyn/clerk) for pub/sub 😉
 
-&rarr; the orginal Go implementation can be found [here](https://github.com/Becklyn/eventor)
+&rarr; the original Go implementation can be found [here](https://github.com/Becklyn/eventor)
 
 ## Installation
 
@@ -20,31 +20,13 @@ composer require becklyn/eventor-symfony
 
 ## Usage
 
-Being a minimalistic libary, *eventor* only provides you with the basiscs. The rest is up to your specific need.
+Being a minimalistic library, *eventor* only provides you with the basics. The rest is up to your specific need.
 
 ### Env variables
 
 ```env
 DAPR_HOST=http://localhost:3500 # Default: (null)
 DAPR_PUBSUB=pubsubname # Default: (null)
-```
-
-### Register the Publisher
-
-```yaml
-# config/services.yaml
-
-Becklyn\Eventor\Application\Publisher:
-    class: Becklyn\Eventor\Infrastructure\Dapr\Publisher\DaprPublisher
-```
-
-### Register the Subscriber
-
-```yaml
-# config/services.yaml
-
-Becklyn\Eventor\Application\Subscriber:
-    class: Becklyn\Eventor\Infrastructure\Dapr\Subscriber\DaprSubscriptionRegistry
 ```
 
 ### Publish
