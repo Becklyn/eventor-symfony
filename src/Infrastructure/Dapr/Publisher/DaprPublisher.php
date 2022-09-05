@@ -6,6 +6,7 @@ namespace Becklyn\Eventor\Infrastructure\Dapr\Publisher;
 
 use Becklyn\Eventor\Application\Publisher\Publisher;
 use Becklyn\Eventor\Application\Publisher\PublishException;
+use Becklyn\Eventor\Application\TraceContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -25,7 +26,7 @@ class DaprPublisher implements Publisher
     /**
      * @throws PublishException|TransportExceptionInterface
      */
-    public function publish(string $topic, mixed $data): void
+    public function publish(string $topic, mixed $data, ?TraceContext $traceContext = null) : void
     {
         try {
             $body = $this->serializer->serialize($data, "json");
@@ -33,14 +34,21 @@ class DaprPublisher implements Publisher
             throw new PublishException("serialization failed", previous: $e);
         }
 
+        $headers = [
+            "Content-Type" => "application/json",
+        ];
+
+        if ($traceContext) {
+            $headers["traceparent"] = $traceContext->traceParent;
+            $headers["tracestate"] = $traceContext->traceState;
+        }
+
         try {
             $response = $this->httpClient->request(
                 Request::METHOD_POST,
                 "{$this->host}/v1.0/publish/{$this->pubsub}/{$topic}",
                 [
-                    "headers" => [
-                        "Content-Type" => "application/json",
-                    ],
+                    "headers" => $headers,
                     "body" => $body,
                 ],
             );
