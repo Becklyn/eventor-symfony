@@ -4,6 +4,7 @@ namespace Becklyn\Eventor\Application\Handler;
 
 use Becklyn\Eventor\Application\Subscriber\Subscriber;
 use CloudEvents\V1\CloudEventInterface;
+use OpenTelemetry\API\Trace\SpanInterface;
 
 class On
 {
@@ -14,18 +15,18 @@ class On
         private readonly Subscriber $subscriber,
         string $topic,
     ) {
-        $this->handler = function (CloudEventInterface $event) use ($handler) {
+        $this->handler = function (CloudEventInterface $event, SpanInterface $span) use ($handler) {
             $handlerFn = new \ReflectionFunction($handler);
             $type = $handlerFn->getParameters()[0]->getType();
 
             if ("array" === (string) $type) {
-                return $handler($event->getData());
+                return $handler($event->getData(), $span);
             }
 
             $serializedData = \json_encode($event->getData(), \JSON_THROW_ON_ERROR);
             $data = \json_decode($serializedData, false, 512, \JSON_THROW_ON_ERROR);
 
-            return $handler($this->cast($data, (string) $type));
+            return $handler($this->cast($data, (string) $type), $span);
         };
 
         $this->subscriber->subscribe($topic, $this->handler);

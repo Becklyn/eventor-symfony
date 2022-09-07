@@ -2,7 +2,9 @@
 
 namespace Becklyn\Eventor\Application\Publisher;
 
+use OpenTelemetry\API\Trace\SpanInterface;
+
 interface Publisher
 {
-    public function publish(string $topic, mixed $data) : void;
+    public function publish(string $topic, mixed $data, ?SpanInterface $span = null) : void;
 }
