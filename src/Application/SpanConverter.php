@@ -33,7 +33,7 @@ final class SpanConverter
     {
         $spanContext = $span->getContext();
 
-        $traceParent = "00-{$spanContext->getTraceId()}-{$spanContext->getSpanId()}-{$spanContext->getTraceFlags()}";
+        $traceParent = "00-{$spanContext->getTraceId()}-{$spanContext->getSpanId()}-0{$spanContext->getTraceFlags()}";
         $traceState = (string) $spanContext->getTraceState();
 
         return new TraceHeaders($traceParent, $traceState);
