@@ -2,8 +2,11 @@
 
 namespace Becklyn\Eventor\Infrastructure\Dapr\Subscriber;
 
+use Becklyn\Eventor\Application\SpanConverter;
 use Becklyn\Eventor\Application\Subscriber\Subscriber;
+use Becklyn\Eventor\Application\TraceHeaders;
 use CloudEvents\Serializers\DeserializerInterface;
+use CloudEvents\V1\CloudEventInterface;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -76,10 +79,14 @@ class DaprSubscriptionRegistry implements Subscriber
         }
 
         try {
+            /** @var CloudEventInterface $event */
             $event = $this->eventDeserializer->deserializeStructured($request->getContent());
         } catch (\Throwable) {
             return new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        $traceHeaders = TraceHeaders::createFromCloudEvent($event);
+        $span = SpanConverter::fromHeaders($traceHeaders);
 
         /** @var \Throwable[]|Collection $errors */
         $errors = Collection::empty();
@@ -87,7 +94,7 @@ class DaprSubscriptionRegistry implements Subscriber
         /** @var callable $handler */
         foreach ($subscriberForTopic->getHandlers() as $handler) {
             try {
-                $handler($event);
+                $handler($event, $span);
             } catch (\Throwable $e) {
                 $errors = $errors->push($e);
             }

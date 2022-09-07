@@ -19,7 +19,10 @@
     "symfony/serializer": "6.1.*",
     "symfony/dependency-injection": "6.1.*",
     "symfony/config": "6.1.*",
-    "symfony/framework-bundle": "^6.1"
+    "symfony/framework-bundle": "^6.1",
+    "guzzlehttp/psr7": "^2.4",
+    "psr/http-client": "^1.0",
+    "open-telemetry/opentelemetry": "^0.0.15"
   },
   "autoload": {
     "psr-4": {
