@@ -1,3 +1,7 @@
+# 2.0.1
+
+- (bug) Fixes a bug where the serialization of traceparent headers was not compliant with the W3C specification. This bug was introduced in 2.0.0.
+
 # 2.0.0
 
 - (breaking) Adds OpenTelemetry tracing
