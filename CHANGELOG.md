@@ -1,3 +1,7 @@
+# 2.0.0
+
+- (breaking) Adds OpenTelemetry tracing
+
 # 1.0.6
 
 - (internal) Use the symfony serializer in publisher
