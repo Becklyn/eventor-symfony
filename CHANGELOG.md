@@ -1,3 +1,7 @@
+# 3.0.0
+
+- (breaking) The Dapr subscription registry no longer catches exceptions in topic subscribers and lets them bubble up the call stack. Any further subscribers are not executed. Previously, the exceptions were caught, other subscribers were called and a 400 response was returned at the end.
+
 # 2.0.1
 
 - (bug) Fixes a bug where the serialization of traceparent headers was not compliant with the W3C specification. This bug was introduced in 2.0.0.

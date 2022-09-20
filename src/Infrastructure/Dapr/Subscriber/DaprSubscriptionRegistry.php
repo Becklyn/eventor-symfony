@@ -88,21 +88,11 @@ class DaprSubscriptionRegistry implements Subscriber
         $traceHeaders = TraceHeaders::createFromCloudEvent($event);
         $span = SpanConverter::fromHeaders($traceHeaders);
 
-        /** @var \Throwable[]|Collection $errors */
-        $errors = Collection::empty();
-
         /** @var callable $handler */
         foreach ($subscriberForTopic->getHandlers() as $handler) {
-            try {
-                $handler($event, $span);
-            } catch (\Throwable $e) {
-                $errors = $errors->push($e);
-            }
+            $handler($event, $span);
         }
 
-        if (!$errors->isEmpty()) {
-            return new Response(status: Response::HTTP_BAD_REQUEST);
-        }
         return new Response(status: Response::HTTP_OK);
     }
 }
